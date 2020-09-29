@@ -1,0 +1,31 @@
+Object Detection - https://drive.google.com/drive/folders/1uhBXsTlLBG1gMRz8lT1VVfGbatDG8m9z?usp=sharing
+
+MNIST with Keras - https://victorzhou.com/blog/keras-neural-network-tutorial/
+
+Chatbot with Keras - https://towardsdatascience.com/deep-learning-for-nlp-creating-a-chatbot-with-keras-da5ca051e051
+
+Sentiment Analysis - CNN vs. LSTM - https://stackabuse.com/python-for-nlp-movie-sentiment-analysis-using-deep-learning-in-keras/
+
+Music Generation with RBM - https://drive.google.com/drive/folders/13jbEyTnKdU_cHSlOeVWmBuF5CnReuwfl?usp=sharing
+
+
+
+Recommendation Engine - 
+
+decrease running time of model
+
+open jupyter from cmd
+python -m notebook
+
+Topic Modeling - 
+https://towardsdatascience.com/end-to-end-topic-modeling-in-python-latent-dirichlet-allocation-lda-35ce4ed6b3e0
+Self Driving Car - https://drive.google.com/drive/folders/1xUmjUQS9-J2rXwtaLOPLnvhEX8PT7ZrL?usp=sharing
+
+Video Generation - https://medium.com/@jctestud/video-generation-with-pix2pix-aed5b1b69f57
+transfer learning - https://towardsdatascience.com/transfer-learning-from-pre-trained-models-f2393f124751
+general tu - https://github.com/Hvass-Labs/TensorFlow-Tutorials
+source of image http://www.image-net.org/download-faq
+
+mentor detail Anurag
+anuragsrivastava17@gmx.com
++1 236 788 2700
