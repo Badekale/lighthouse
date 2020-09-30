@@ -13,7 +13,8 @@ import os
 def detect_and_predict_mask(frame, faceNet, maskNet):
     # grab the dimensions of the frame and then construct a blob
     # from it
-    (h, w) = frame.shape[:2]
+#     (h, w) = frame.shape[:2]
+    (h,w,c)=frame.shape
     blob = cv2.dnn.blobFromImage(frame, 1.0, (224, 224),
         (104.0, 177.0, 123.0))
 
@@ -82,11 +83,14 @@ maskNet = load_model("mask_detector.model")
 
 # initialize the video stream
 print("[INFO] starting video stream...")
-vs = VideoStream(src=0).start()
-size = (224, 400)
+vs = cv2.VideoCapture(0)
+statu,frame = vs.read()
+width = int(vs.get(cv2.CAP_PROP_FRAME_WIDTH) + 0.5)
+height = int(vs.get(cv2.CAP_PROP_FRAME_HEIGHT) + 0.5)
+size = (width, height)
 # print(width, height)
 fourcc = cv2.VideoWriter_fourcc(*'XVID')
-out = cv2.VideoWriter('project_video.avi', fourcc, 20.0, size)
+out = cv2.VideoWriter('project_video_samp.avi', fourcc, 20.0, size)
 
 # width = 224
 # height = 224
@@ -106,11 +110,13 @@ thresh = 150
 while True:
     # grab the frame from the threaded video stream and resize it
     # to have a maximum width of 400 pixels
-    frame = vs.read()
-    frame = imutils.resize(frame, width=400)
+    
+    statu,frame = vs.read()
+#     frame = imutils.resize(frame, width=400)
+    (h,w,c)=frame.shape
+    frame = cv2.resize(frame,(h, 400))
 #     (width,height,c) = frame.shape
     
-#     dist = np.zeros((num,num))
     # detect faces in the frame and determine if they are wearing a
     # face mask or not
     (locs, preds,faces) = detect_and_predict_mask(frame, faceNet, maskNet)
@@ -127,12 +133,7 @@ while True:
             
     dist_a = compute_distance(midpoint,noss)
     print(dist_a)
-#     if noss>1:
-#         for i in range(noss):
-#             for j in range(i,noss):
-#                   if i!=j & (dist_a[i][j]<=thresh)& noss>1:
-#                         startX, startY, endX, endY=dimen[i]
-#                         cv2.circle(frame, (int((startX+endX)/2), int((startY+endY)/2)), 5 , [255,0,0] , -1)
+
     
                     
     for (box, pred) in zip(locs, preds):
@@ -172,9 +173,11 @@ while True:
 #                         cv2.circle(frame, (int((startX+endX)/2), int((startY+endY)/2)), 5 , [255,0,0] , -1)
                         cv2.line(frame, (x1, y1), (x2,y2), (0,200,200), 2)
                         frame=cv2.putText(frame, "Maintain 6ft away", (x1+10, max(y1,y2)),font, 0.45, (200,50,100), 2)
+                        
                     else:
-                                 pass
-    out.write(frame) 
+                                pass
+        out.write(frame)
+#     out.release() 
     # show the output frame
     cv2.imshow("Frame", frame)
 #     time.sleep(5)
@@ -186,4 +189,3 @@ while True:
 
 # do a bit of cleanup
 cv2.destroyAllWindows()
-vs.stop()
