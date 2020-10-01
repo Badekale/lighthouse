@@ -25,6 +25,7 @@ Video Generation - https://medium.com/@jctestud/video-generation-with-pix2pix-ae
 transfer learning - https://towardsdatascience.com/transfer-learning-from-pre-trained-models-f2393f124751
 general tu - https://github.com/Hvass-Labs/TensorFlow-Tutorials
 source of image http://www.image-net.org/download-faq
+using cv2--https://www.codingforentrepreneurs.com/blog/how-to-record-video-in-opencv-python/
 
 mentor detail Anurag
 anuragsrivastava17@gmx.com
