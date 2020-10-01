@@ -1,3 +1,4 @@
+
 from tensorflow.keras.applications.mobilenet_v2 import preprocess_input
 from tensorflow.keras.preprocessing.image import img_to_array
 from tensorflow.keras.models import load_model
@@ -90,7 +91,7 @@ height = int(vs.get(cv2.CAP_PROP_FRAME_HEIGHT) + 0.5)
 size = (width, height)
 # print(width, height)
 fourcc = cv2.VideoWriter_fourcc(*'XVID')
-out = cv2.VideoWriter('project_rough.avi', fourcc, 30.0, size)
+out = cv2.VideoWriter('project_rough.avi', fourcc, 20.0, size)
 
 def compute_distance(midpoints,num):
     dist_a = np.zeros((num,num))
@@ -100,8 +101,8 @@ def compute_distance(midpoints,num):
                     dst = dist.euclidean(midpoints[i], midpoints[j])
                     dist_a[i][j]=dst
     return dist_a
-
-thresh = 150
+# min length for social distancing in mm
+thresh = 200
 # loop over the frames from the video stream
 while True:
 
@@ -162,10 +163,9 @@ while True:
                         y1,y2 =int((startY+endY)/2),int((startY2+endY2)/2)
             #                         cv2.circle(frame, (int((startX+endX)/2), int((startY+endY)/2)), 5 , [255,0,0] , -1)
                         frame = cv2.line(frame, (x1, y1), (x2,y2), (0,200,200), 2)
-                        frame = cv2.putText(frame, "Maintain 6ft away", (x1+10, max(y1,y2)),font, 0.45, (200,50,100), 2)
+                        frame = cv2.putText(frame,"Maintain 6ft apart", (min(x1+10,x2+10), max(y1,y2)),font, 0.7, (200,50,100), 2)
     
-    #     frame = cv2.resize(frame,(h, 400))
-#     print('hello world')
+
     out.write(frame)
     cv2.imshow("Frame", frame)
 
