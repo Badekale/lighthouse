@@ -25,7 +25,12 @@ Video Generation - https://medium.com/@jctestud/video-generation-with-pix2pix-ae
 transfer learning - https://towardsdatascience.com/transfer-learning-from-pre-trained-models-f2393f124751
 general tu - https://github.com/Hvass-Labs/TensorFlow-Tutorials
 source of image http://www.image-net.org/download-faq
+
 using cv2--https://www.codingforentrepreneurs.com/blog/how-to-record-video-in-opencv-python/
+-----http://arahna.de/opencv-save-video/
+https://github.com/mmilovec/facedetectionOpenCV/blob/master/face_detector_video.py
+https://www.youtube.com/watch?v=1eHQIu4r0Bc
+video api-- https://medium.com/datadriveninvestor/video-streaming-using-flask-and-opencv-c464bf8473d6
 
 mentor detail Anurag
 anuragsrivastava17@gmx.com

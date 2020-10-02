@@ -79,19 +79,21 @@ prototxtPath = r"face_detector\deploy.prototxt"
 weightsPath = r"face_detector\res10_300x300_ssd_iter_140000.caffemodel"
 faceNet = cv2.dnn.readNet(prototxtPath, weightsPath)
 
+
 # load the face mask detector model from disk
 maskNet = load_model("mask_detector.model")
+maskNet._make_predict_function()
 
 # initialize the video stream
 print("[INFO] starting video stream...")
-vs = cv2.VideoCapture(0)
+# vs = cv2.VideoCapture(0)
 # statu,frame = vs.read()
-width = int(vs.get(cv2.CAP_PROP_FRAME_WIDTH) + 0.5)
-height = int(vs.get(cv2.CAP_PROP_FRAME_HEIGHT) + 0.5)
-size = (width, height)
+# width = int(vs.get(cv2.CAP_PROP_FRAME_WIDTH) + 0.5)
+# height = int(vs.get(cv2.CAP_PROP_FRAME_HEIGHT) + 0.5)
+# size = (width, height)
 # print(width, height)
-fourcc = cv2.VideoWriter_fourcc(*'XVID')
-out = cv2.VideoWriter('project_rough.avi', fourcc, 20.0, size)
+# fourcc = cv2.VideoWriter_fourcc(*'XVID')
+# out = cv2.VideoWriter('project_rough.avi', fourcc, 20.0, size)
 
 def compute_distance(midpoints,num):
     dist_a = np.zeros((num,num))
@@ -104,69 +106,67 @@ def compute_distance(midpoints,num):
 # min length for social distancing in mm
 thresh = 200
 # loop over the frames from the video stream
-while True:
-
-    statu,frame = vs.read()
-    (h,w)=frame.shape[:2]
+class VideoCamera(object):
+    def __init__(self):
+        self.video = cv2.VideoCapture(0)
+    
+    def __del__(self):
+        self.video.release()
         
-    (locs, preds,faces) = detect_and_predict_mask(frame, faceNet, maskNet)
-    noss = len(faces)
-    print(noss)
-    # loop over the detected face locations and their corresponding
-    midpoint = []
-    dimen=[]
-    for (box, pred) in zip(locs, preds):
-    # unpack the bounding box and predictions
-        (startX, startY, endX, endY) = box
-        dimen.append((startX, startY, endX, endY))
-        midpoint.append((int((startX+endX)/2), int((startY+endY)/2)))
+    def get_frame(self):   
+        statu,frame = self.video.read()
+        (h,w)=frame.shape[:2]
+
+        (locs, preds,faces) = detect_and_predict_mask(frame, faceNet, maskNet)
+        noss = len(faces)
+        print(noss)
+        # loop over the detected face locations and their corresponding
+        midpoint = []
+        dimen=[]
+        for (box, pred) in zip(locs, preds):
+        # unpack the bounding box and predictions
+            (startX, startY, endX, endY) = box
+            dimen.append((startX, startY, endX, endY))
+            midpoint.append((int((startX+endX)/2), int((startY+endY)/2)))
+                
+        dist_a = compute_distance(midpoint,noss)
+        print(dist_a)
+        
+        for (box, pred) in zip(locs, preds):
+        # unpack the bounding box and predictions
+            (startX, startY, endX, endY) = box
+            (mask, withoutMask) = pred
+    
+            # determine the class label and color we'll use to draw
+            # the bounding box and text
+            label = "Mask" if mask > withoutMask else "No Mask"
+            color = (0, 255, 0) if label == "Mask" else (0, 0, 255)
+    
+            # include the probability in the label
+            label = "{}: {:.2f}%".format(label, max(mask, withoutMask) * 100)
+    
+            font=cv2.FONT_HERSHEY_SIMPLEX
+            frame =cv2.putText(frame, label, (startX, startY - 10),
+                font, 0.45, color, 2)
             
-    dist_a = compute_distance(midpoint,noss)
-    print(dist_a)
+    #         cv2.circle(frame, (int((startX+endX)/2), int((startY+endY)/2)), 3 , [255,0,0] , -1)
+            frame = cv2.rectangle(frame, (startX, startY), (endX, endY), color, 2)
+    #         print(mask,withoutMask)
+            title = "Mask" if mask > withoutMask else "No Mask"
+            if noss>1 and (title=='No Mask'):
+                for i in range(noss):
+                    for j in range(i,noss):
+                        if i!=j & (dist_a[i][j]<=thresh):
     
-    for (box, pred) in zip(locs, preds):
-    # unpack the bounding box and predictions
-        (startX, startY, endX, endY) = box
-        (mask, withoutMask) = pred
-
-        # determine the class label and color we'll use to draw
-        # the bounding box and text
-        label = "Mask" if mask > withoutMask else "No Mask"
-        color = (0, 255, 0) if label == "Mask" else (0, 0, 255)
-
-        # include the probability in the label
-        label = "{}: {:.2f}%".format(label, max(mask, withoutMask) * 100)
-
-        font=cv2.FONT_HERSHEY_SIMPLEX
-        frame =cv2.putText(frame, label, (startX, startY - 10),
-            font, 0.45, color, 2)
-        
-#         cv2.circle(frame, (int((startX+endX)/2), int((startY+endY)/2)), 3 , [255,0,0] , -1)
-        frame = cv2.rectangle(frame, (startX, startY), (endX, endY), color, 2)
-#         print(mask,withoutMask)
-        title = "Mask" if mask > withoutMask else "No Mask"
-        if noss>1 and (title=='No Mask'):
-            for i in range(noss):
-                for j in range(i,noss):
-                    if i!=j & (dist_a[i][j]<=thresh):
-
-                        startX, startY, endX, endY=dimen[i]
-                        startX2, startY2, endX2, endY2=dimen[j]
-#                         print(startX2, startY2, endX2, endY2)
-                        x1,x2=int((startX+endX)/2),int((startX2+endX2)/2)
-                        y1,y2 =int((startY+endY)/2),int((startY2+endY2)/2)
-            #                         cv2.circle(frame, (int((startX+endX)/2), int((startY+endY)/2)), 5 , [255,0,0] , -1)
-                        frame = cv2.line(frame, (x1, y1), (x2,y2), (0,200,200), 2)
-                        frame = cv2.putText(frame,"Maintain 6ft apart", (min(x1+10,x2+10), max(y1,y2)),font, 0.7, (200,50,100), 2)
+                            startX, startY, endX, endY=dimen[i]
+                            startX2, startY2, endX2, endY2=dimen[j]
+    #                         print(startX2, startY2, endX2, endY2)
+                            x1,x2=int((startX+endX)/2),int((startX2+endX2)/2)
+                            y1,y2 =int((startY+endY)/2),int((startY2+endY2)/2)
+                #                         cv2.circle(frame, (int((startX+endX)/2), int((startY+endY)/2)), 5 , [255,0,0] , -1)
+                            frame = cv2.line(frame, (x1, y1), (x2,y2), (0,200,200), 2)
+                            frame = cv2.putText(frame,"Maintain 6ft apart", (min(x1+10,x2+10), max(y1,y2)),font, 0.7, (200,50,100), 2)
     
 
-    out.write(frame)
-    cv2.imshow("Frame", frame)
-    
-    key = cv2.waitKey(1) & 0xFF
-    # if the `q` key was pressed, break from the loop
-    if key == ord("q"):
-        break
-
-# do a bit of cleanup
-cv2.destroyAllWindows()
+        ret, jpeg = cv2.imencode('.jpg', frame)
+        return jpeg.tobytes()
