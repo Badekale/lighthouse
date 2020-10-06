@@ -21,6 +21,11 @@ Topic Modeling -
 https://towardsdatascience.com/end-to-end-topic-modeling-in-python-latent-dirichlet-allocation-lda-35ce4ed6b3e0
 Self Driving Car - https://drive.google.com/drive/folders/1xUmjUQS9-J2rXwtaLOPLnvhEX8PT7ZrL?usp=sharing
 
+social distance,facemask- https://github.com/aqeelanwar/SocialDistancingAI
+https://github.com/Lucifergene/Social-Distancing-Project-OpenCV
+https://github.com/balajisrinivas/Face-Mask-Detection
+https://www.youtube.com/watch?v=Ax6P93r32KU&list=LL4AsWdwuQoMhZv6hnOCgKcA&index=1&t=123s
+
 Video Generation - https://medium.com/@jctestud/video-generation-with-pix2pix-aed5b1b69f57
 transfer learning - https://towardsdatascience.com/transfer-learning-from-pre-trained-models-f2393f124751
 general tu - https://github.com/Hvass-Labs/TensorFlow-Tutorials
@@ -31,6 +36,8 @@ using cv2--https://www.codingforentrepreneurs.com/blog/how-to-record-video-in-op
 https://github.com/mmilovec/facedetectionOpenCV/blob/master/face_detector_video.py
 https://www.youtube.com/watch?v=1eHQIu4r0Bc
 video api-- https://medium.com/datadriveninvestor/video-streaming-using-flask-and-opencv-c464bf8473d6
+flask-
+https://towardsdatascience.com/how-to-deploy-a-pre-trained-keras-model-with-opencv-and-flask-86c9dab76a9c
 
 mentor detail Anurag
 anuragsrivastava17@gmx.com
